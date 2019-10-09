@@ -92,7 +92,10 @@ def TrainBot():
         rewards.append(total_reward)
         logs += f"Episode: {step} |total_reward: {total_reward} |done: {done} |do it in : {i} step\n"   
         epsilon *= 0.98
-    with open(os.path.join(root_dir, 'data/train_logs.txt'), 'w') as file:
+    data_dir = os.path.join(root_dir, 'data')
+    if not os.path.exists(data_dir):
+        os.mkdir(data_dir)
+    with open(os.path.join(data_dir, 'train_logs.txt'), 'w') as file:
         file.write(logs)
 
     return Q_table, rewards
@@ -120,5 +123,8 @@ def nextMove(Q):
         step_log = next_game_board + meta_step + '\n'
         Play_logs += step_log
     Play_logs += f'Game total reward: {total_reward}'
-    with open(os.path.join(root_dir, 'data/Play_logs.txt'), 'w') as file:
+    data_dir = os.path.join(root_dir, 'data')
+    if not os.path.exists(data_dir):
+        os.mkdir(data_dir)
+    with open(os.path.join(data_dir, 'Play_logs.txt'), 'w') as file:
         file.write(Play_logs)
