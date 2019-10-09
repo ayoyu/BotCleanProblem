@@ -11,7 +11,7 @@ def print_board(board):
 	for y in board:
 		row = ''.join(y)
 		out += row + '\n'
-	print(out)
+	return out
 
 
 def generate_random_board():

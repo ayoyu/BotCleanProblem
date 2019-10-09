@@ -1,12 +1,14 @@
+import os
 import random
-from utils import (print_board, generate_random_board,
+from .utils import (print_board, generate_random_board,
     get_distance, generate_board)
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 Possible_actions = {0: "UP", 1: "DOWN", 2: "LEFT", 3: "RIGHT"}
 DISCOUNT = 0.99
+current_dir = os.path.realpath(os.path.dirname(__file__))
+root_dir = os.path.join(current_dir, '..')
 
 
 def find_position(board, item):
@@ -57,6 +59,7 @@ def env(board, a, dirty_pos):
 
 
 def TrainBot():
+    logs = ''
     Q_table = np.random.uniform(low=0.0, high=2., size=(5, 5, 5, 5, 4))
     epsilon = 0.25
     alpha = 0.5
@@ -64,7 +67,6 @@ def TrainBot():
     for step in range(1000):
         board = generate_random_board()
         dirty_pos = find_position(board, 'd')
-        #state = get_state(board)
         total_reward = 0
 
         for i in range(10**4):
@@ -73,9 +75,7 @@ def TrainBot():
             y_b, x_b, y_d, x_d = (*state, *dirty_pos)
             if random.random() <= epsilon:
                 a = np.random.choice(range(0, 4))
-                
             else:
-                
                 a = np.argmax(Q_table[y_b][x_b][y_d][x_d])
             
             action_name = Possible_actions[a]
@@ -87,13 +87,14 @@ def TrainBot():
                 (r + DISCOUNT * max(Q_table[next_y_b][next_x_b][y_d][x_d])) -  Q_table[y_b][x_b][y_d][x_d][a])
             board = next_board
             total_reward += r
-            rewards.append(total_reward)
-            
+        
             if done: break
-
-        print('step :', step, '|total_reward: ', total_reward, '|done:', done
-            , 'in: ', i)    
+        rewards.append(total_reward)
+        logs += f"Episode: {step} |total_reward: {total_reward} |done: {done} |do it in : {i} step\n"   
         epsilon *= 0.98
+    with open(os.path.join(root_dir, 'data/train_logs.txt'), 'w') as file:
+        file.write(logs)
+
     return Q_table, rewards
 
 
@@ -101,9 +102,8 @@ def nextMove(Q):
     total_reward = 0
     board = generate_random_board()
     dirty_pos = find_position(board, 'd')
-    print('Game Board')
-    print_board(board)
-    print('Play Game', '*' * 40)
+    game_board = print_board(board)
+    Play_logs = 'Game Board\n' + game_board + 'Play Game' + '*' * 40 + '\n'
     done = False
     step = 0
     while not done:
@@ -115,15 +115,10 @@ def nextMove(Q):
         board = next_board
         total_reward += reward
         step += 1
-        print_board(next_board)
-        print('step: ', step, '|reward:', reward, '|done:', done)
-        print('*' * 50)
-   
-    print('total reward: ', total_reward)
-
-
-if __name__ == '__main__':
-    Q, r = TrainBot()
-    plt.plot(r)
-    plt.show()
-    nextMove(Q)
+        next_game_board = print_board(next_board)
+        meta_step = f'step: {step} |reward: {reward} |done: {done}\n' + '*' * 50
+        step_log = next_game_board + meta_step + '\n'
+        Play_logs += step_log
+    Play_logs += f'Game total reward: {total_reward}'
+    with open(os.path.join(root_dir, 'data/Play_logs.txt'), 'w') as file:
+        file.write(Play_logs)
