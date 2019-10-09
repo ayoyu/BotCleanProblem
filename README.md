@@ -2,7 +2,7 @@
 
 **Using Q_learning to solve the Clean-Bot problem**
 
-The Bot need to make smarter moves to clean the dirty cell.
+**Goal :** The Bot needs to make smarter moves to clean the dirty cell.
 
 ## install Dependencies:
 
@@ -37,7 +37,7 @@ Play_logs.txt  rewardsFig.png  train_logs.txt
 
 ![Clean Game](./figures/CleanGame.png)
 
-- **CleanGame.png:**
+- **rewardsFig.png:**
 
 
 ![Rewards](./figures/rewardsFig.png)
