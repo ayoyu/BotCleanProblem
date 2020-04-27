@@ -1,38 +1,63 @@
-import random
-import numpy as np
-import math
-
-def get_random_pos():
-	return random.randint(0, 4), random.randint(0, 4)
+import heapq
 
 
-def print_board(board):
-	out = ''
-	for y in board:
-		row = ''.join(y)
-		out += row + '\n'
-	return out
+class DataStructure:
+
+	def __init__(self):
+		self.container = list()
 
 
-def generate_random_board():
-	board = np.array([['-'] * 5] * 5)
-	y_b = y_d = x_b = x_d = 0
-	while y_b == y_d and x_b == x_d:
-		y_b, x_b = get_random_pos()
-		y_d, x_d = get_random_pos()
-	
-	board[y_b][x_b], board[y_d][x_d] = 'b', 'd'
-	return board
+	def __repr__(self): return str(self.container)
 
 
-def generate_board(bot_pos, dirty_pos):
-	board = np.array([['-'] * 5] * 5)
-	board[bot_pos[0]][bot_pos[1]] = 'b'
-	board[dirty_pos[0]][dirty_pos[1]] = 'd'
-	return board
+	def put(self, item):
+		self.container.append(item)
 
 
-def get_distance(point1, point2):
-	y = (point2[0] - point1[0]) ** 2
-	x = (point2[1] - point1[1]) ** 2
-	return math.sqrt(y + x)
+	def empty(self):
+		return len(self.container) == 0
+
+
+class Queue(DataStructure):
+	"""
+	FIFO Policy Queue
+	"""
+	def get(self):
+		item = self.container.pop(0)
+		return item
+
+
+class Stack(DataStructure):
+	"""
+	Stack LIFO Policy
+	"""
+	def get(self):
+		item = self.container.pop()
+		return item
+
+
+class PriorityQueue(DataStructure):
+	"""
+	MinHeap:
+	Each inserted item has a priority associated with it and the client 
+	is usually interested in quick retrieval of the lowest-priority item 
+	in the queue. This data structure allows O(1) access to the lowest-priority item.
+	"""
+	def __init__(self, priority_function):
+		super(PriorityQueue, self).__init__()
+		self.priority_function = priority_function
+		self.count = 0
+
+
+	def put(self, item):
+		if not hasattr(item, 'pos'):
+			raise ValueError('pos attribute not found for the item instance that you try to push')
+		priority = self.priority_function(item.pos)
+		item_heap = (priority, self.count, item)
+		heapq.heappush(self.container, item_heap)
+		self.count += 1
+
+
+	def get(self):
+		_, _, item = heapq.heappop(self.container)
+		return item

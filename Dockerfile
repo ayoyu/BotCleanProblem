@@ -1,9 +1,15 @@
-FROM python:3
+FROM python:3.6
+
+LABEL maintainer="khaliayoub9@gmail.com"
+
+ENV PYTHONDONTWRITEBYTECODE 1
+
+ENV PYTHONUNBUFFERED 1
 
 COPY ./ ./app
 
 WORKDIR ./app
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "TrainPlay.py"]
+CMD ["python", "main.py"]

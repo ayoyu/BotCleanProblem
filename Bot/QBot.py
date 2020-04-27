@@ -1,25 +1,13 @@
 import os
 import random
-from .utils import (print_board, generate_random_board,
-    get_distance, generate_board)
+from .board import (print_board, generate_random_board,
+                    find_position, HEIGHT, WIDTH,
+                    Actions, action_result)
 import numpy as np
+from copy import deepcopy
 
 
-Possible_actions = {0: "UP", 1: "DOWN", 2: "LEFT", 3: "RIGHT"}
 DISCOUNT = 0.99
-current_dir = os.path.realpath(os.path.dirname(__file__))
-root_dir = os.path.join(current_dir, '..')
-
-
-def find_position(board, item):
-    y = 0
-    for row in board:
-        if item in row:
-            break
-        else:
-            y += 1
-    x = board[min(4, y)].tolist().index(item)
-    return y, x
 
 
 def get_state(board):
@@ -27,44 +15,43 @@ def get_state(board):
     return y_b, x_b
 
 
-# def get_reward(bot_pos, dirty_pos):
-#     distance = get_distance(bot_pos, dirty_pos)
-#     return - distance
-
 def get_reward(bot_pos, dirty_pos):
     return -1 if bot_pos != dirty_pos else 10
 
-
-def action_result(a, y_b, x_b):
-    if a == "UP":
-        y_b = max(0, y_b - 1) 
-    elif a == "DOWN":
-        y_b = min(4, y_b + 1)
-    elif a == "LEFT":
-        x_b = max(0, x_b - 1)
-    elif a == "RIGHT":
-        x_b = min(4, x_b + 1)
-    return y_b, x_b
-
     
 def env(board, a, dirty_pos):
-    assert a in ["UP", "DOWN", "LEFT", "RIGHT"]
-    y, x = find_position(board, "b")
-    y_old, x_old = y, x
-    y, x = action_result(a, y, x)
+    if a not in Actions.values():
+        raise ValueError("undefined action for this board problem")
+    y_old, x_old = find_position(board, "b")
+    y, x = action_result(a, y_old, x_old)
     board[y_old][x_old], board[y][x] = "-", "b"
     reward = get_reward((y, x), dirty_pos)
     done = True if (y, x) == dirty_pos else False
     return board, reward, done
 
 
-def TrainBot():
+def train_bot(data_dir):
+    """
+    Args:
+    ------
+        data_dir (str): path for logs data directory
+    
+    Returns:
+    --------
+        Q_table(numpy 5D)
+        rewards: list of rewards
+    """
     logs = ''
-    Q_table = np.random.uniform(low=0.0, high=2., size=(5, 5, 5, 5, 4))
+    # the state is encoded with Bot position et dirty position
+    # Bot (5x_b, 5y_b) and Dirty (5x_d, 5y_d) Q_table[y_b][x_b][y_d][x_d]
+    Q_table = np.random.uniform(low=0.0,
+                                high=2.,
+                                size=(HEIGHT, WIDTH, HEIGHT, WIDTH, 4)
+                                )
     epsilon = 0.25
     alpha = 0.5
     rewards = []
-    for step in range(1000):
+    for step in range(10000):
         board = generate_random_board()
         dirty_pos = find_position(board, 'd')
         total_reward = 0
@@ -78,7 +65,7 @@ def TrainBot():
             else:
                 a = np.argmax(Q_table[y_b][x_b][y_d][x_d])
             
-            action_name = Possible_actions[a]
+            action_name = Actions[a]
             next_board, r, done = env(board, action_name, dirty_pos)
             
             next_state = get_state(next_board)
@@ -92,28 +79,36 @@ def TrainBot():
         rewards.append(total_reward)
         logs += f"Episode: {step} |total_reward: {total_reward} |done: {done} |do it in : {i} step\n"   
         epsilon *= 0.98
-    data_dir = os.path.join(root_dir, 'data')
-    if not os.path.exists(data_dir):
-        os.mkdir(data_dir)
-    with open(os.path.join(data_dir, 'train_logs.txt'), 'w') as file:
+    q_data_dir = os.path.join(data_dir, 'Qdata')
+    if not os.path.exists(q_data_dir):
+        os.mkdir(q_data_dir)
+    with open(os.path.join(q_data_dir, 'train_logs.txt'), 'w') as file:
         file.write(logs)
 
     return Q_table, rewards
 
 
-def nextMove(Q):
+def Q_play(Q, Problem, data_dir):
+    """
+    Args:
+    -----
+        Q(numpy 5D): Q table resulting from the training
+        Problem instance: the board problem to solve
+        data_dir (str): path for logs data directory
+    """
     total_reward = 0
-    board = generate_random_board()
-    dirty_pos = find_position(board, 'd')
-    game_board = print_board(board)
-    Play_logs = 'Game Board\n' + game_board + 'Play Game' + '*' * 40 + '\n'
+    board = deepcopy(Problem.board)
+    dirty_pos = Problem.dirty_pos
+    game_board = str(Problem)
+    Play_logs = 'Game Board Q-learning\n' + game_board + 'Play Game' \
+                + '*' * 40 + '\n'
     done = False
     step = 0
     while not done:
         state = get_state(board)
         y_b, x_b, y_d, x_d = (*state, *dirty_pos)
         a = np.argmax(Q[y_b][x_b][y_d][x_d])
-        action_name = Possible_actions[a]
+        action_name = Actions[a]
         next_board, reward, done = env(board, action_name, dirty_pos)
         board = next_board
         total_reward += reward
@@ -123,8 +118,8 @@ def nextMove(Q):
         step_log = next_game_board + meta_step + '\n'
         Play_logs += step_log
     Play_logs += f'Game total reward: {total_reward}'
-    data_dir = os.path.join(root_dir, 'data')
-    if not os.path.exists(data_dir):
-        os.mkdir(data_dir)
-    with open(os.path.join(data_dir, 'Play_logs.txt'), 'w') as file:
+    q_data_dir = os.path.join(data_dir, 'Qdata')
+    if not os.path.exists(q_data_dir):
+        os.mkdir(q_data_dir)
+    with open(os.path.join(q_data_dir, 'play_logs.txt'), 'w') as file:
         file.write(Play_logs)
