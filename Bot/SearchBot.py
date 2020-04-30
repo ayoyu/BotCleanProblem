@@ -91,9 +91,9 @@ class SearchAlgo:
 		return actions[::-1], search_log
 
 
-	def _env(self, board, action):
+	def _env(self, board, action, height, width):
 		y_old, x_old = find_position(board, "b")
-		y, x = action_result(action, y_old, x_old)
+		y, x = action_result(action, y_old, x_old, height, width)
 		board[y_old][x_old], board[y][x] = "-", "b"
 		return board
 
@@ -115,7 +115,7 @@ class SearchAlgo:
 					+ game_board + 'Play Game' + '*' * 40 + '\n'
 		step = 1
 		for a in actions:
-			next_board = self._env(board, a)
+			next_board = self._env(board, a, self.Problem.height, self.Problem.width)
 			next_game_board = print_board(next_board)
 			meta_step = f'step: {step} |action: {a}\n' + '*' * 50
 			step_log = next_game_board + meta_step + '\n'

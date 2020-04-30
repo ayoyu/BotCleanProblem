@@ -10,25 +10,26 @@ import matplotlib.pyplot as plt
 
 
 def main():
+	HEIGHT, WIDTH = 8, 10
 	root_dir = os.path.realpath(os.path.dirname(__file__))
 	data_dir = os.path.join(root_dir, 'data')
 	if not os.path.exists(data_dir):
 		os.mkdir(data_dir)
 	# define the board problem
-	p = Problem()
+	p = Problem(height=HEIGHT, width=WIDTH)
 	# define the search algo with BFS algorithm and play
-	algo_bfs  = SearchAlgo(p, data_dir, algo='BFS')
-	algo_bfs.play()
+	bfs_agent  = SearchAlgo(p, data_dir, algo='BFS')
+	bfs_agent.play()
 	# define the search algo with DFS algorithm and play
-	algo_dfs  = SearchAlgo(p, data_dir, algo='DFS')
-	algo_dfs.play()
+	dfs_agent  = SearchAlgo(p, data_dir, algo='DFS')
+	dfs_agent.play()
 	# define the search algo with UCS algorithm and play
-	algo_ucs  = SearchAlgo(p, data_dir, algo='UCS')
-	algo_ucs.play()
+	ucs_agent  = SearchAlgo(p, data_dir, algo='UCS')
+	ucs_agent.play()
 
 	# Train the Q-learning algorithm for the board problem
 	# and save the reward figure during training
-	Q, r = train_bot(data_dir)
+	Q, r = train_bot(data_dir, height=HEIGHT, width=WIDTH)
 	plt.plot(r)
 	plt.xlabel('Episode', fontsize=18)
 	plt.ylabel('Total reward', fontsize=16)
