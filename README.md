@@ -56,7 +56,7 @@ $ docker run -d -v $PWD/bots_data:/app/data cleanbot
 - Command line interface (CLI), to chose between algorithms
   and change the board dimensions.
 
-### Create the virtual env (Recomended):
+### Create the virtual env (recommended):
 ```
 $ virtualenv -p python3.6 myenv
 $ source myenv/bin/activate
