@@ -68,7 +68,7 @@ $ source myenv/bin/activate
 (myenv)$ python bot_clean.py --help
 usage: BotClean [-h] [-H HEIGHT] [-W WIDTH] [-a {BFS,DFS,UCS,Qlearning}]
 
-Run simulation with different algorithms and different 
+Run simulations with differents algorithms and differents 
 dimensions of the board to test the performance of your agent.
 List of algorithms to use:
 - BFS:       Breadth First Search
@@ -89,22 +89,22 @@ optional arguments:
 
 Example usage:
 --------------
-- Run the game with Uniform Cost Search agent in a board with dimensions
+- Run the game with Breadth First Search agent in a board with dimensions
   HEIGHT x WIDTH:
 
-  	$ python bot_clean.py -H 10 -W 15 -a UCS
+    $ python bot_clean.py -H 10 -W 15 -a BFS
 
-- Run the game with Q-learning agent in a board with default dimension (8 x 10):
+- Run the game with Q-learning agent in a board with default dimensions (8 x 10):
 
-	$ python bot_clean.py -a Qlearning
+  $ python bot_clean.py -a Qlearning
 
-- RUN the game with the default algorithm Breadth First Search:
+- RUN the game with the default algorithm Uniform Cost Search:
 
-	$ python bot_clean.py -H 7 -W 20
+  $ python bot_clean.py -H 7 -W 20
 
-- RUN the game with the defautl args agent(BFS), board dimensions(8 x 10):
+- RUN the game with the defaults args agent(UCS), board dimensions(8 x 10):
 
-	$ python bot_clean.py
+  $ python bot_clean.py
 
 ```
 ### Example:
