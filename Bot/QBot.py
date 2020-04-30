@@ -1,8 +1,7 @@
 import os
 import random
 from .board import (print_board, generate_random_board,
-                    find_position, HEIGHT, WIDTH,
-                    Actions, action_result)
+                    find_position, Actions, action_result)
 import numpy as np
 from copy import deepcopy
 
@@ -19,18 +18,18 @@ def get_reward(bot_pos, dirty_pos):
     return -1 if bot_pos != dirty_pos else 10
 
     
-def env(board, a, dirty_pos):
+def env(board, a, dirty_pos, height, width):
     if a not in Actions.values():
         raise ValueError("undefined action for this board problem")
     y_old, x_old = find_position(board, "b")
-    y, x = action_result(a, y_old, x_old)
+    y, x = action_result(a, y_old, x_old, height, width)
     board[y_old][x_old], board[y][x] = "-", "b"
     reward = get_reward((y, x), dirty_pos)
     done = True if (y, x) == dirty_pos else False
     return board, reward, done
 
 
-def train_bot(data_dir):
+def train_bot(data_dir, height, width):
     """
     Args:
     ------
@@ -46,13 +45,13 @@ def train_bot(data_dir):
     # Bot (5x_b, 5y_b) and Dirty (5x_d, 5y_d) Q_table[y_b][x_b][y_d][x_d]
     Q_table = np.random.uniform(low=0.0,
                                 high=2.,
-                                size=(HEIGHT, WIDTH, HEIGHT, WIDTH, 4)
+                                size=(height, width, height, width, 4)
                                 )
     epsilon = 0.25
     alpha = 0.5
     rewards = []
     for step in range(10000):
-        board = generate_random_board()
+        board = generate_random_board(height, width)
         dirty_pos = find_position(board, 'd')
         total_reward = 0
 
@@ -66,8 +65,12 @@ def train_bot(data_dir):
                 a = np.argmax(Q_table[y_b][x_b][y_d][x_d])
             
             action_name = Actions[a]
-            next_board, r, done = env(board, action_name, dirty_pos)
-            
+            next_board, r, done = env(board,
+                                    action_name,
+                                    dirty_pos,
+                                    height,
+                                    width
+                                )
             next_state = get_state(next_board)
             next_y_b, next_x_b = next_state
             Q_table[y_b][x_b][y_d][x_d][a] = Q_table[y_b][x_b][y_d][x_d][a] + alpha * (
@@ -100,6 +103,7 @@ def Q_play(Q, Problem, data_dir):
     board = deepcopy(Problem.board)
     dirty_pos = Problem.dirty_pos
     game_board = str(Problem)
+    height, width = Problem.height, Problem.width
     Play_logs = 'Game Board Q-learning\n' + game_board + 'Play Game' \
                 + '*' * 40 + '\n'
     done = False
@@ -109,7 +113,12 @@ def Q_play(Q, Problem, data_dir):
         y_b, x_b, y_d, x_d = (*state, *dirty_pos)
         a = np.argmax(Q[y_b][x_b][y_d][x_d])
         action_name = Actions[a]
-        next_board, reward, done = env(board, action_name, dirty_pos)
+        next_board, reward, done = env(board,
+                                    action_name,
+                                    dirty_pos,
+                                    height,
+                                    width
+                                )
         board = next_board
         total_reward += reward
         step += 1
