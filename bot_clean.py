@@ -46,14 +46,26 @@ if __name__ == '__main__':
 		prog = "BotClean",
 		formatter_class=argparse.RawDescriptionHelpFormatter,
 		description=textwrap.dedent("""\
-			Run simulations with differents algorithms and differents 
-			dimensions of the board to test the performance of your agent.
-			List of algorithms to use:
-			- BFS:       Breadth First Search
-			- DFS:       Depth First Search
-			- UCS:       Uniform Cost Search
-			- Qlearning: Qlearning (table version)
-			"""
+
+
+ ____    ___   ______         __  _        ___   ____  ____  
+|    \  /   \ |      |       /  ]| |      /  _] /    ||    \ 
+|  o  )|     ||      |      /  / | |     /  [_ |  o  ||  _  |
+|     ||  O  ||_|  |_|     /  /  | |___ |    _]|     ||  |  |
+|  O  ||     |  |  |      /   \_ |     ||   [_ |  _  ||  |  |
+|     ||     |  |  |      \     ||     ||     ||  |  ||  |  |
+|_____| \___/   |__|       \____||_____||_____||__|__||__|__|
+                                                             
+
+
+Run simulations with differents algorithms and differents dimensions of the board 
+to test the performance of your agent.
+List of algorithms to use:
+	- BFS:       Breadth First Search
+	- DFS:       Depth First Search
+	- UCS:       Uniform Cost Search
+	- Qlearning: Qlearning (table version)
+"""
 			),
 		epilog=textwrap.dedent("""\
 			Example usage:

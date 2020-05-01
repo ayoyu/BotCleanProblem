@@ -68,13 +68,21 @@ $ source myenv/bin/activate
 (myenv)$ python bot_clean.py --help
 usage: BotClean [-h] [-H HEIGHT] [-W WIDTH] [-a {BFS,DFS,UCS,Qlearning}]
 
-Run simulations with differents algorithms and differents 
-dimensions of the board to test the performance of your agent.
+ ____    ___   ______         __  _        ___   ____  ____  
+|    \  /   \ |      |       /  ]| |      /  _] /    ||    \ 
+|  o  )|     ||      |      /  / | |     /  [_ |  o  ||  _  |
+|     ||  O  ||_|  |_|     /  /  | |___ |    _]|     ||  |  |
+|  O  ||     |  |  |      /   \_ |     ||   [_ |  _  ||  |  |
+|     ||     |  |  |      \     ||     ||     ||  |  ||  |  |
+|_____| \___/   |__|       \____||_____||_____||__|__||__|__|
+
+Run simulations with differents algorithms and differents dimensions of the board 
+to test the performance of your agent.
 List of algorithms to use:
-- BFS:       Breadth First Search
-- DFS:       Depth First Search
-- UCS:       Uniform Cost Search
-- Qlearning: Qlearning (table version)
+  - BFS:       Breadth First Search
+  - DFS:       Depth First Search
+  - UCS:       Uniform Cost Search
+  - Qlearning: Qlearning (table version)
 
 optional arguments:
   -h, --help            show this help message and exit
