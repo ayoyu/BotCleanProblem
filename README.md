@@ -68,13 +68,12 @@ $ source myenv/bin/activate
 (myenv)$ python bot_clean.py --help
 usage: BotClean [-h] [-H HEIGHT] [-W WIDTH] [-a {BFS,DFS,UCS,Qlearning}]
 
- ____    ___   ______         __  _        ___   ____  ____  
-|    \  /   \ |      |       /  ]| |      /  _] /    ||    \ 
-|  o  )|     ||      |      /  / | |     /  [_ |  o  ||  _  |
-|     ||  O  ||_|  |_|     /  /  | |___ |    _]|     ||  |  |
-|  O  ||     |  |  |      /   \_ |     ||   [_ |  _  ||  |  |
-|     ||     |  |  |      \     ||     ||     ||  |  ||  |  |
-|_____| \___/   |__|       \____||_____||_____||__|__||__|__|
+██████╗  ██████╗ ████████╗     ██████╗██╗     ███████╗ █████╗ ███╗   ██╗    
+██╔══██╗██╔═══██╗╚══██╔══╝    ██╔════╝██║     ██╔════╝██╔══██╗████╗  ██║    
+██████╔╝██║   ██║   ██║       ██║     ██║     █████╗  ███████║██╔██╗ ██║    
+██╔══██╗██║   ██║   ██║       ██║     ██║     ██╔══╝  ██╔══██║██║╚██╗██║    
+██████╔╝╚██████╔╝   ██║       ╚██████╗███████╗███████╗██║  ██║██║ ╚████║    
+╚═════╝  ╚═════╝    ╚═╝        ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝    
 
 Run simulations with differents algorithms and differents dimensions of the board 
 to test the performance of your agent.
@@ -87,13 +86,13 @@ List of algorithms to use:
 optional arguments:
   -h, --help            show this help message and exit
   -H HEIGHT, --height HEIGHT
-                        chose the height dimension for the board game (default
-                        8).
+                        choose the height dimension for the board game
+                        (default 8).
   -W WIDTH, --width WIDTH
-                        chose the width dimension for the board game (default
+                        choose the width dimension for the board game (default
                         10).
   -a {BFS,DFS,UCS,Qlearning}, --agent {BFS,DFS,UCS,Qlearning}
-                        chose the agent to use for the simulation game
+                        choose the agent to use for the simulation game
 
 Example usage:
 --------------
@@ -113,6 +112,7 @@ Example usage:
 - RUN the game with the defaults args agent(UCS), board dimensions(8 x 10):
 
   $ python bot_clean.py
+
 
 ```
 ### Example:

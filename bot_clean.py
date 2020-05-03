@@ -48,15 +48,13 @@ if __name__ == '__main__':
 		description=textwrap.dedent("""\
 
 
- ____    ___   ______         __  _        ___   ____  ____  
-|    \  /   \ |      |       /  ]| |      /  _] /    ||    \ 
-|  o  )|     ||      |      /  / | |     /  [_ |  o  ||  _  |
-|     ||  O  ||_|  |_|     /  /  | |___ |    _]|     ||  |  |
-|  O  ||     |  |  |      /   \_ |     ||   [_ |  _  ||  |  |
-|     ||     |  |  |      \     ||     ||     ||  |  ||  |  |
-|_____| \___/   |__|       \____||_____||_____||__|__||__|__|
-                                                             
-
+██████╗  ██████╗ ████████╗     ██████╗██╗     ███████╗ █████╗ ███╗   ██╗    
+██╔══██╗██╔═══██╗╚══██╔══╝    ██╔════╝██║     ██╔════╝██╔══██╗████╗  ██║    
+██████╔╝██║   ██║   ██║       ██║     ██║     █████╗  ███████║██╔██╗ ██║    
+██╔══██╗██║   ██║   ██║       ██║     ██║     ██╔══╝  ██╔══██║██║╚██╗██║    
+██████╔╝╚██████╔╝   ██║       ╚██████╗███████╗███████╗██║  ██║██║ ╚████║    
+╚═════╝  ╚═════╝    ╚═╝        ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝    
+                                                                            
 
 Run simulations with differents algorithms and differents dimensions of the board 
 to test the performance of your agent.
@@ -93,19 +91,19 @@ List of algorithms to use:
 	parser.add_argument(
 		'-H', '--height', type=int, default=HEIGHT,
 		help="""\
-		chose the height dimension for the board game (default 8).
+		choose the height dimension for the board game (default 8).
 		"""
 		)
 	parser.add_argument(
 		'-W', '--width', type=int, default=WIDTH,
 		help="""\
-		chose the width dimension for the board game (default 10).
+		choose the width dimension for the board game (default 10).
 		"""
 		)
 	parser.add_argument(
 		'-a', '--agent', type=str, default='UCS', choices=AGENTS,
 		help="""\
-		chose the agent to use for the simulation game 
+		choose the agent to use for the simulation game 
 		"""
 		)
 	args = parser.parse_args()
