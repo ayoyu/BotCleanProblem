@@ -22,11 +22,14 @@ HEIGHT, WIDTH = 8, 10
 def main(args):
 	agent = args.agent
 	height, width = args.height, args.width
+	maze = args.maze
+	if maze and agent == 'Qlearning':
+		raise NotImplementedError("Not Implemented yet choose the graph search algorithms for this type of problem")
 	root_dir = os.path.realpath(os.path.dirname(__file__))
 	data_dir = os.path.join(root_dir, 'data')
 	if not os.path.exists(data_dir):
 		os.mkdir(data_dir)
-	p = Problem(height, width)
+	p = Problem(height, width, maze=maze)
 	if agent == 'Qlearning':
 		Q, r = train_bot(data_dir, height=height, width=width)
 		plt.plot(r)
@@ -56,13 +59,16 @@ if __name__ == '__main__':
 ╚═════╝  ╚═════╝    ╚═╝        ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝    
                                                                             
 
-Run simulations with differents algorithms and differents dimensions of the board 
+Run simulations with differents algorithms and differents dimensions of the board/maze 
 to test the performance of your agent.
 List of algorithms to use:
 	- BFS:       Breadth First Search
 	- DFS:       Depth First Search
 	- UCS:       Uniform Cost Search
 	- Qlearning: Qlearning (table version)
+
+Check your agent's logs/figures of performance in the ./data directory that will
+be created after running a simulation. 
 """
 			),
 		epilog=textwrap.dedent("""\
@@ -73,13 +79,18 @@ List of algorithms to use:
 
 			  	$ python bot_clean.py -H 10 -W 15 -a BFS
 
+			- Run the game with Breadth First Search agent in a random maze with dimensions
+			  HEIGHT x WIDTH:
+
+			  	$ python bot_clean.py -H 10 -W 15 -a BFS --maze
+
 			- Run the game with Q-learning agent in a board with default dimensions (8 x 10):
 
 				$ python bot_clean.py -a Qlearning
 
-			- RUN the game with the default algorithm Uniform Cost Search:
+			- RUN the game with the default algorithm Uniform Cost Search in a random maze:
 
-				$ python bot_clean.py -H 7 -W 20
+				$ python bot_clean.py -H 7 -W 20 --maze
 
 			- RUN the game with the defaults args agent(UCS), board dimensions(8 x 10):
 
@@ -106,5 +117,11 @@ List of algorithms to use:
 		choose the agent to use for the simulation game 
 		"""
 		)
+	parser.add_argument(
+		'-m', '--maze', action='store_true',
+		help="""\
+		boolean argument to generate a random maze for the game
+		"""
+	)
 	args = parser.parse_args()
 	main(args)

@@ -24,11 +24,17 @@ def print_board(board):
 	return out
 
 
-def generate_random_board(height, width):
+def generate_random_board(height, width, maze=False):
 	"""
-	generate random board
+	generate random board/maze
+	maze:
+		'-': tag for free space
+		'#': tag for obstacle
 	"""
-	board = [['-'] * width for _ in range(height)]
+	if not maze:
+		board = [['-'] * width for _ in range(height)]
+	else:
+		board = [[random.choice(['-', '#']) for _ in range(width)] for _ in range(height)]
 	y_b = y_d = x_b = x_d = 0
 	while y_b == y_d and x_b == x_d:
 		y_b, x_b = get_random_pos(height, width)
@@ -76,10 +82,11 @@ class Problem:
 	wrapper for encoding the board
 	"""
 
-	def __init__(self, height, width):
+	def __init__(self, height, width, maze=False):
 		self.height = height
 		self.width = width
-		self.board =  generate_random_board(height, width)
+		self.maze = maze
+		self.board =  generate_random_board(height, width, maze=maze)
 		self.init_bot_pos = find_position(self.board, 'b')
 		self.dirty_pos = find_position(self.board, 'd')
 
@@ -96,14 +103,25 @@ class Problem:
 		"""
 		forbidden_actions = list()
 		y, x = pos
-		if y == 0:
-			forbidden_actions.append('UP')
-		elif y == self.height - 1:
-			forbidden_actions.append('DOWN')
-		if x == 0:
-			forbidden_actions.append('LEFT')
-		elif x == self.width - 1:
-			forbidden_actions.append('RIGHT')
+		if not self.maze:
+			if y - 1 < 0:
+				forbidden_actions.append('UP')
+			elif y + 1 > self.height - 1:
+				forbidden_actions.append('DOWN')
+			if x - 1 < 0:
+				forbidden_actions.append('LEFT')
+			elif x + 1 > self.width - 1:
+				forbidden_actions.append('RIGHT')
+		else:
+			if y - 1 < 0 or self.board[y - 1][x] == '#':
+				forbidden_actions.append('UP')
+			if y + 1 > self.height - 1 or self.board[y + 1][x] == '#':
+				forbidden_actions.append('DOWN')
+			if x - 1 < 0 or self.board[y][x - 1] == '#':
+				forbidden_actions.append('LEFT')
+			if x + 1 > self.width - 1 or self.board[y][x + 1] == '#':
+				forbidden_actions.append('RIGHT')
+				
 		possible_actions = [
 			a for a in Actions.values() if a not in forbidden_actions
 		]
@@ -116,7 +134,7 @@ class Problem:
 	def is_goal(self, pos):
 		return self.dirty_pos == pos
 
-
+	# Euclidienne distance heuristic for UCS
 	def distance_to_dirty(self, pos):
 		y, x = pos
 		y_d, x_d = self.dirty_pos

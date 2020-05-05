@@ -1,4 +1,5 @@
 import os
+import sys
 from .utils import Queue, Stack, PriorityQueue
 from .board import print_board, find_position, action_result
 import math
@@ -67,6 +68,9 @@ class SearchAlgo:
 
 
 	def get_actions_path(self):
+		"""
+		Planning Part
+		"""
 		search_log = ''
 		actions = list()
 		state = State(pos=self.Problem.init_bot_pos)
@@ -82,6 +86,9 @@ class SearchAlgo:
 			if not frontier.empty():
 				state = frontier.get()
 				search_log += f' -> Get the {state} from the frontier to expand\n'
+			else:
+				print(print_board(self.Problem.board))
+				sys.exit('No solution for this maze: Exit')
 			if self.Problem.is_goal(state.pos):
 				search_log += f'Reach the goal state {state}\n'
 				break
