@@ -27,7 +27,7 @@ $ docker run -d -v $PWD/bots_data:/app/data cleanbot
 
 ### Now check the performance of your Bots:
 
-- To view the logs and figures of the 4 Bots, check the ```./bots_data``` directory, you will find 4 directories:
+- To view the logs and figures of the 4 Bots, check the ```./bots_data``` volume, you will find 4 directories:
 ```
 ├── BFS_data
 │   ├── play_logs.txt
@@ -131,7 +131,7 @@ Example usage:
 ```
 (myenv)$ python bot_clean.py --maze -a UCS
 ```
-#### Game:
+#### Maze:
 ![UCS planning](./figures/UcsMaze.gif)
 
 
@@ -148,7 +148,7 @@ Example usage:
 
 ![UCS planning](./figures/UCS_Planning.png)
 
-**State(action, (y, x)):** the state definition in the board
+**State(action, (y, x)):** the state definition in the board/maze
 
 **Hints:** 
 - board/Maze indexing starts with 0
@@ -172,4 +172,4 @@ No solution for this maze: Exit
 ```
 
 ## TO DO: 
-- Analyse performance between agents in differents board dimensions 
+- Analyse performance between agents in differents board/maze dimensions 
