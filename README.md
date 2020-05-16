@@ -10,7 +10,7 @@
 
 **Goal :** The Bot needs to make smarter moves to clean the dirty cell on a board/Maze with dimensions HEIGHT x WIDTH.
 
-## install Dependencies:
+## Run as a docker image:
 
 [docker](https://docs.docker.com/install/)
 
